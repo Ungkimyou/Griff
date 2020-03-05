@@ -1,60 +1,67 @@
-const { RichEmbed } = require("discord.js");
-const { stripIndents } = require("common-tags");
-const { getMember, formatDate } = require("../../function.js");
+const Discord = require("discord.js");
 
 module.exports = {
   name: "userinfo",
   category: "info",
-  usage: "[username | id | mention]",
-  description: "Returns user information",
-  run: (client, message, args) => {
-    const member = getMember(message, args.join(" "));
+  description: "gives info of mentioned user",
+  usage: "userinfo <optional mention>",
+  aliases: ["ui"],
 
-    // Member variables
-    const joined = formatDate(member.joinedAt);
-    const roles =
-      member.roles
-        .filter(r => r.id !== message.guild.id)
-        .map(r => r)
-        .join(", ") || "none";
+  run: async (client, message, args) => {
+    let inline = true;
+    let status = {
+      online: "<:online:656127026150768654> Online",
+      idle: "<:idle:656126919649001472>  Idle",
+      dnd: "<:dnd:656126974044930059> Do Not Disturb",
+      offline: "<:offline:656126866775736351> Offline/Invisible"
+    };
 
-    // User variables
-    const created = formatDate(member.user.createdAt);
+    let member =
+      message.mentions.members.first() ||
+      message.guild.members.get(args[0]) ||
+      message.member;
+    let target = message.mentions.users.first() || message.author;
 
-    const embed = new RichEmbed()
-      .setFooter(member.displayName, member.user.displayAvatarURL)
-      .setThumbnail(member.user.displayAvatarURL)
-      .setColor(
-        member.displayHexColor === "#000000"
-          ? "#ffffff"
-          : member.displayHexColor
-      )
-
+    let uiembed = new Discord.RichEmbed()
+      //.setAuthor(member.user.username)
+      .setThumbnail(target.displayAvatarURL)
+      .setColor("#00ff22")
+      .addField("Full Username", `${member.user.tag}`, inline)
+      .addField("ID", member.user.id, inline)
       .addField(
-        "Member information:",
-        stripIndents`**> Display name:** ${member.displayName}
-            **> Joined at:** ${joined}
-            **> Roles:** ${roles}`,
+        "Nickname",
+        `${member.nickname !== null ? `Nickname: ${member.nickname}` : "None"}`,
         true
       )
 
       .addField(
-        "User information:",
-        stripIndents`**> ID:** ${member.user.id}
-            **> Username**: ${member.user.username}
-            **> Tag**: ${member.user.tag}
-            **> Created at**: ${created}`,
+        "Status",
+        `${status[member.user.presence.status]}`,
+        inline,
         true
       )
-
+      .addField(
+        "Playing",
+        `${
+          member.user.presence.game
+            ? `🎮 ${member.user.presence.game.name}`
+            : "Playing Nothing"
+        }`,
+        inline,
+        true
+      )
+      .addField(
+        "Roles",
+        `${member.roles
+          .filter(r => r.id !== message.guild.id)
+          .map(roles => `\`${roles.name}\``)
+          .join(" **|** ") || "No Roles"}`,
+        true
+      )
+      .addField("Joined Discord At", member.user.createdAt)
+      .setFooter(`Information about ${member.user.username}`)
       .setTimestamp();
 
-    if (member.user.presence.game)
-      embed.addField(
-        "Currently playing",
-        stripIndents`**> Name:** ${member.user.presence.game.name}`
-      );
-
-    message.channel.send(embed);
+    message.channel.send(uiembed);
   }
 };

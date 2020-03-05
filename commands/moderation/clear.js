@@ -13,7 +13,7 @@ module.exports = {
     
     
     if (isNaN(args[0]) || parseInt(args[0]) <= 0)
-      return message.channel.send('Cannot resolve ``purge`` argument.')
+      return message.channel.send('Cannot resolve ``clear`` argument.')
   
     
     if (!message.member.hasPermission('MANAGE_MESSAGES'))
@@ -21,7 +21,7 @@ module.exports = {
       .then(message => message.delete(6000));
     
     if (!message.guild.me.hasPermission('MANAGE_MESSAGES'))
-      return message.channel.send(`I am lacking the permission node: \`MANAGE_MESSAGES\`\ `)
+      return message.channel.send(`I am lacking the permission \`MANAGE_MESSAGES\`\ `)
 
     
     let deleteAmount;
@@ -29,17 +29,17 @@ module.exports = {
     if (parseInt(args[0]) > 100) {
       deleteAmount = 100;
     } else {
-      deleteAmount = parseInt(args[0]);
+      deleteAmount = parseInt(args[0]) + 1;
     }
     
     setTimeout(() => {
       message.channel.bulkDelete(deleteAmount, true)
       .then(value => {
-        message.channel.send(`Cleared **__${value.size}__** messages.`)
+        message.channel.send(`Deleted **__${deleteAmount}__** messages.`)
           .then(msg => msg.delete(6000))
       })
       .catch(err => {
-        message.channel.send(`An error occured while purging messages. \n\`${err}\`\ `)
+        message.channel.send(`An error occured while deleting messages. \n\`${err}\`\ `)
           .then(msg => msg.delete(6000))
       })
     }, 1200);

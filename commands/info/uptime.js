@@ -1,7 +1,7 @@
 module.exports = {
         name: "uptime",
         description: "Displays the bots current uptime!",
-        usage: "!uptime",
+        usage: "uptime",
         category: "info",
         accessableby: "Members",
         aliases: ["ut"],

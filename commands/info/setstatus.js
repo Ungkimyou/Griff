@@ -1,45 +1,25 @@
 module.exports = {
-    name: "setstatus",
+  name: "setstatus",
   category: "info",
-  aliases: ["ss"],
-  usage: "USAGE !work",
-    description: "Returns user information",
+  aliases: ["st"],
+  usage: "",
+  description: "",
 
+  run: async (client, message, args) => {
+    const Discord = require("discord.js");
+    const log = client.channels.find("id", "677739402826612776");
+    let user = message.member.username;
+    log.send(`${user} changed bot status to ${args.join}`);
 
-run: async (client, message, args) => {
-    const setStatus = message.content.split(' ');
-
-    if(!message.member.hasPermission("ADMINISTATOR")){
-        return message.channel.send("You don't have the permissions to use this command!");
-    }
-
-    else if(setStatus[1] === 'idle'){
-        client.user.setStatus('idle')
-            .then(message.channel.send("My status has been set to: "+setStatus[1]))
-            .catch(console.error);
-    } 
-
-    else if(setStatus[1] === 'online'){
-        client.user.setStatus('online')
-            .then(message.channel.send("My status has been set to: "+ setStatus[1]))
-            .catch(console.error);
-    }
-
-    else if(setStatus[1] === 'invisible'){
-        client.user.setStatus('invisible')
-            .then(message.channel.send("My status has been set to: "+ setStatus[1]))
-            .catch(console.error);
-    }
-
-    else if(setStatus[1] === 'dnd'){
-        client.user.setStatus('do not disturb')
-            .then(message.channel.send("My status has been set to: "+ setStatus[1] + "(do not disturb)"))
-            .catch(console.error);
-    }
-
-    else{
-        return message.channel.send("I could not set my status please type one of the following status: idle, online, invisible, dnd (do not disturb)");
-    }
-
-}
-}
+    if (message.member.id !== "507965365930950657")
+      return message.reply("only bot owners can do this");
+    const db = require("quick.db");
+    let status = db.fetch(`status`);
+    if (status === null) status = `${client.guilds.size} servers`;
+    db.set(`status`, `${args.join(" ")}`);
+    message.channel.send(
+      `bot's status setted to ${args.join} wait sometime. Bot is rebooting...`
+    );
+    process.exit(0);
+  }
+};

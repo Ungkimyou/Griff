@@ -1,9 +1,7 @@
-exports.TOKEN = "NjczMDA4MTEwOTgxMzQ5Mzc2.XjTytA.PiXwO92oVyMZljo-y30ONwAIa1g";
+const db = require("quick.db");
 
-exports.PREFIX = "**";
+exports.PREFIX = "g!";
 
-exports.STATUS = `I am being developed`;
+exports.STATUS = `${db.fetch(`status`)}`;
 
 exports.OWNERID = "507965365930950657";
-
-exports.GOOGLE_API_KEY = "AIzaSyC8GHxFJ17uRpUYuyUngZ4lrlWNV_P85-w";

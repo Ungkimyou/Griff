@@ -4,7 +4,7 @@ const { redlight } = require("../../colours.json")
 module.exports= {
         name: "addrole",
         description: "Adds a role to a member of the guild!",
-        usage: "!addrole",
+        usage: "addrole @user role",
         category: "moderation",
         accessableby: "Moderators",
         aliases: ["ar", "roleadd"],
