@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 const db = require("quick.db");
-
+const { OWNERID } = require("./config.js")
 module.exports = {
   name: "addmoney",
   category: "economy",
